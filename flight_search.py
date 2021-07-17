@@ -14,13 +14,11 @@ class FlightSearch:
                                                 'date_from': '17/07/2021',
                                                 'date_to': '17/07/2022',
                                                 'fly_to': location,
-                                                'one_for_city': '1'},
+                                                'one_for_city': '1',
+                                                'curr': 'USD'},
                                         headers={'apikey': api_key}
                                         )
             self.flight_prices.append(flight_price.json())
-
-        with open('dog.json', mode='w') as dog:
-            json.dump(self.flight_prices, fp=dog, indent=4)
 
     def get_list(self):
         return self.flight_prices
