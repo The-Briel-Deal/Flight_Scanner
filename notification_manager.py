@@ -3,6 +3,9 @@ import os
 import requests
 from flight_search import FlightSearch
 from data_manager import DataManager
+import smtplib
+import email.message
+
 
 class NotificationManager:
     def __init__(self):
@@ -14,8 +17,13 @@ class NotificationManager:
         self.search = FlightSearch(self.locations)
         dm = DataManager()
         self.location_price_df = dm.return_df()
+        self.contacts_df = dm.get_contacts()
 
-
+        my_email = "gfapsnmpblasterbussy@gmail.com"
+        password = "Doudles44%%"
+        self.connection = smtplib.SMTP("smtp.gmail.com")
+        self.connection.starttls()
+        self.connection.login(user=my_email, password=password)
 
     def link_shortener(self, link):
         return requests.post(url='https://api-ssl.bitly.com/v4/shorten',
@@ -48,3 +56,19 @@ class NotificationManager:
             from_='+18312222233',
             to=phones
         )
+        self.email_clients(message)
+
+    def email_clients(self, message):
+        dict_email_clients = self.contacts_df.to_dict('records')
+        for num in range(len(dict_email_clients)):
+            firstname = dict_email_clients[num]['firstname']
+            lastname = dict_email_clients[num]['lastname']
+            email_address = dict_email_clients[num]['email']
+            print(f'Your first name is {firstname}, Your last name is {lastname}, Your email is {email_address}')
+
+            MESSAGE = email.message.EmailMessage()
+            MESSAGE['Subject'] = f'Flights for {firstname} {lastname}'
+            MESSAGE['From'] = 'gfapsnmpblasterbussy@gmail.com'
+            MESSAGE['To'] = email_address
+            MESSAGE.set_content(message)
+            self.connection.send_message(MESSAGE)

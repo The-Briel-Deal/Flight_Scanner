@@ -2,7 +2,6 @@ import requests
 import os
 import json
 import datetime
-
 import data_manager
 from flight_search import FlightSearch
 from notification_manager import NotificationManager
@@ -16,7 +15,6 @@ my_phone = os.environ.get('my_phone')
 
 notification = NotificationManager()
 text = notification.text_creator()
-dm = data_manager.DataManager()
 
 # ----- Twilio Testing----- #
 
